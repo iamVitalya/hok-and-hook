@@ -1,13 +1,29 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.App {
+  font-family: sans-serif;
+  text-align: center;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+input[type="search"] {
+  padding: 0.5rem 1rem;
+  display: inline-block;
+}
+
+.form-radio {
+  padding: 1rem 0;
+}
+.form-radio > *:last-child {
+  margin-left: 1rem;
+}
+
+li {
+  line-height: 1.6;
+}
+
+ul {
+  list-style: none;
 }
