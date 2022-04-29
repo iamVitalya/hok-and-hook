@@ -1,47 +1,22 @@
-import { useState, useEffect } from 'react';
+import withFilter from './hok/withFilter';
+import withSort from './hok/withSort';
 import { ITodo } from './types/data';
 
 interface IAppProps {
   list: Array<ITodo>;
+  enteredSearchValue: string;
+  setEnteredSearchValue: (v: string) => void;
+  sortMode: string | null;
+  handlerSortMode: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const App: React.FC<IAppProps> = ({ list }) => {
-  const [enteredSearchValue, setEnteredSearchValue] = useState<string>('');
-  const [activeSearchValue, setActiveSearchValue] = useState<string>('');
-  const [sortMode, setSortMode] = useState<string | null>(null);
-
-  const handlerSortMode = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setSortMode(e.target.value);
-  };
-
-  const availableItems: ITodo[] = activeSearchValue
-    ? list.filter((item) => RegExp(activeSearchValue, 'i').test(item.title))
-    : list;
-
-  const sortedItems: ITodo[] = !sortMode
-    ? availableItems
-    : availableItems.slice().sort((a, b) => {
-        if (sortMode === 'asc' && a.title > b.title) {
-          return 1;
-        } else if (sortMode === 'asc') {
-          return -1;
-        } else if (sortMode === 'desc' && a.title > b.title) {
-          return -1;
-        } else {
-          return 1;
-        }
-      });
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setActiveSearchValue(enteredSearchValue);
-    }, 300);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [enteredSearchValue]);
-
+const App: React.FC<IAppProps> = ({
+  list,
+  enteredSearchValue,
+  sortMode,
+  handlerSortMode,
+  setEnteredSearchValue,
+}) => {
   return (
     <div className='App'>
       <div className='form'>
@@ -72,7 +47,7 @@ const App: React.FC<IAppProps> = ({ list }) => {
       </div>
 
       <ul>
-        {sortedItems.map((item) => (
+        {list.map((item) => (
           <li key={item.id}>{item.title}</li>
         ))}
       </ul>
@@ -80,4 +55,4 @@ const App: React.FC<IAppProps> = ({ list }) => {
   );
 };
 
-export default App;
+export default withSort(withFilter(App, 'title'), 'title');
