@@ -1,46 +1,26 @@
-import { useState, useEffect } from 'react';
-import { ITodo } from './types/data';
+import {useFilter} from './hooks/filter';
+import {useSort} from './hooks/sort';
+import {ITodo} from './types/data';
 
 interface IAppProps {
   list: Array<ITodo>;
 }
 
-const App: React.FC<IAppProps> = ({ list }) => {
-  const [enteredSearchValue, setEnteredSearchValue] = useState<string>('');
-  const [activeSearchValue, setActiveSearchValue] = useState<string>('');
-  const [sortMode, setSortMode] = useState<string | null>(null);
+const App: React.FC<IAppProps> = ({list}) => {
+  const {
+    enteredSearchValue,
+    setEnteredSearchValue,
+    availableItems
+  } = useFilter(list, 'title');
+
+  const {sortMode, setSortMode, sortedItems} = useSort(
+    availableItems,
+    'title'
+  );
 
   const handlerSortMode = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setSortMode(e.target.value);
   };
-
-  const availableItems: ITodo[] = activeSearchValue
-    ? list.filter((item) => RegExp(activeSearchValue, 'i').test(item.title))
-    : list;
-
-  const sortedItems: ITodo[] = !sortMode
-    ? availableItems
-    : availableItems.slice().sort((a, b) => {
-        if (sortMode === 'asc' && a.title > b.title) {
-          return 1;
-        } else if (sortMode === 'asc') {
-          return -1;
-        } else if (sortMode === 'desc' && a.title > b.title) {
-          return -1;
-        } else {
-          return 1;
-        }
-      });
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setActiveSearchValue(enteredSearchValue);
-    }, 300);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [enteredSearchValue]);
 
   return (
     <div className='App'>
